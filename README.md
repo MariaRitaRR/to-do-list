@@ -29,7 +29,7 @@ Main (entrada)
 
 ## Tecnologias utilizadas
 
-- Java 17
+- Java 21
 - Maven (ou Java puro, se for o caso)
 - Lombok
 
