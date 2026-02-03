@@ -162,17 +162,17 @@ POST /api/tasks
 ```
 ## Tratamento de Erros
 
--Validações automáticas com Bean Validation
--Handler global de exceções (@RestControllerAdvice)
--Respostas padronizadas para erros de validação e regras de negócio
+- Validações automáticas com Bean Validation
+- Handler global de exceções (@RestControllerAdvice)
+- Respostas padronizadas para erros de validação e regras de negócio
 
 ## Próximos passos
 
--Paginação e ordenação de tarefas
--Autenticação e autorização
--Documentação da API com Swagger / OpenAPI
--Persistência em banco relacional externo (PostgreSQL ou MySQL)
--Testes automatizados (JUnit / Mockito)
+- Paginação e ordenação de tarefas
+- Autenticação e autorização
+- Documentação da API com Swagger / OpenAPI
+- Persistência em banco relacional externo (PostgreSQL ou MySQL)
+- Testes automatizados (JUnit / Mockito)
 
 ## Autora
 
