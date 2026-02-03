@@ -5,6 +5,7 @@ import lombok.Data;
 import tech.ada.java.todolistapi.enums.TaskStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class Task {
 
     @Column(length = 2000)
     private String description;
-    private LocalDate dueDate;
+    private LocalDateTime dueDate;
 
     @Enumerated(EnumType.STRING)//para salvar a String
     private TaskStatus status;
