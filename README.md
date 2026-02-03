@@ -1,37 +1,128 @@
 # ToDo List em Java
 
-Aplicação de ToDo List desenvolvida em Java com foco em boas práticas de
-arquitetura, separação de responsabilidades e futura migração para Spring Boot.
+API REST de gerenciamento de tarefas (ToDo List) desenvolvida em **Java com Spring Boot**, com foco em boas práticas de arquitetura, separação de responsabilidades e escalabilidade.
+
+O projeto consome dados externos, persiste informações em banco de dados H2 e expõe endpoints REST para gerenciamento de usuários e tarefas.
+
+---
 
 ## Funcionalidades
 
-- Cadastrar tarefa
-- Listar tarefas pendentes
-- Buscar tarefa por título
-- Marcar tarefa como concluída
-- Remover tarefa
+### Usuários
+- Cadastro e persistência de usuários
+- Importação automática de usuários via API externa (`dummyjson.com`)
+
+### Tarefas
+- Criar tarefas associadas a um usuário
+- Listar tarefas visíveis por usuário
+- Definir status da tarefa (`TODO`, `DOING`, `DONE`)
+- Definir tarefas públicas ou privadas
+- Associar participantes a uma tarefa
+- Importação automática de tarefas via API externa
+
+---
+
 
 ## Arquitetura
 
-O projeto segue uma separação em camadas inspirada no padrão MVC:
+O projeto segue uma **arquitetura em camadas**, inspirada no padrão MVC:
 
-- **Entity**: representa a tarefa e seus atributos
-- **Service**: contém as regras de negócio da aplicação
-- **Main**: atua como camada de entrada (Controller no futuro)
+```md
+Controller
+↓
+Service
+↓
+Repository
+↓
+Entity
+```
 
-Essa estrutura foi pensada para facilitar a migração futura para Spring Boot.
+### Camadas
 
-```bash
-Main (entrada)
-  └── TarefaService (regra de negócio)
-        └── Tarefa (entidade)
-````
+- **Controller**
+  - Exposição dos endpoints REST
+  - Recebimento e validação das requisições HTTP
 
-## Tecnologias utilizadas
+- **Service**
+  - Regras de negócio
+  - Conversão entre DTOs e entidades
+  - Integração com APIs externas
+  - Lógica de seed do banco de dados
+
+- **Repository**
+  - Acesso a dados via Spring Data JPA
+
+- **Entity**
+  - Representação das entidades persistidas no banco
+
+- **DTO**
+  - Objetos de transferência de dados
+  - Separação entre modelo interno e contrato da API
+
+- **Exception**
+  - Tratamento global de erros e validações
+
+---
+
+## Modelos Principais
+
+### TaskStatus (Enum)
+- `TODO`
+- `DOING`
+- `DONE`
+
+### Entidades
+- **User**
+- **Task**
+  - Relacionamento com usuário (owner)
+  - Relacionamento com participantes
+
+---
+
+## Integrações Externas
+
+- Consumo da API **dummyjson.com**
+  - `/users`
+  - `/todos`
+
+Os dados são carregados automaticamente na inicialização da aplicação através do `SeedService`.
+
+---
+
+## Tecnologias Utilizadas
 
 - Java 21
-- Maven (ou Java puro, se for o caso)
+- Spring Boot 3
+- Spring Web
+- Spring Data JPA
+- WebClient
+- H2 Database
 - Lombok
+- Maven
+
+---
+
+## Configuração do Projeto
+
+### Banco de Dados (H2)
+
+- Banco em memória
+- Console disponível em: http://localhost:8080/h2-console
+
+
+Configurações principais (`application.properties`):
+
+```properties
+spring.datasource.url=jdbc:h2:mem:todo-db
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=mr
+spring.datasource.password=senha
+
+spring.jpa.hibernate.ddl-auto=update
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+````
+
 
 ## Como executar
 
@@ -40,32 +131,48 @@ Main (entrada)
 git clone https://github.com/MariaRitaRR/to-do-list
 
 ```
-
-
+2. Acesse a pasta do projeto:
+```bash
+cd todo-list-api
+```
+3. Execute a aplicação:
+```bash
+mvn spring-boot:run
+```
 ---
 
-### 6️⃣ Exemplo de uso (menu)
-Isso deixa o README **mais concreto**:
+### Exemplos de Endpoints
 
-```md
-## Exemplo de uso
-
-Ao executar a aplicação, o seguinte menu é exibido no console:
-
-1 - Cadastrar tarefa  
-2 - Listar tarefas pendentes  
-3 - Buscar tarefa por título  
-4 - Marcar tarefa como concluída  
-5 - Remover tarefa  
-0 - Sair
+```bash
+POST /api/tasks
 ```
+-> Exemplo de body:
+```json
+{
+  "title": "Estudar Spring Boot",
+  "description": "Criada via Postman",
+  "dueDate": "2026-02-10T18:00",
+  "status": "TODO",
+  "isPublic": false,
+  "ownerId": 1,
+  "participantIds": [2, 3]
+}
+
+
+```
+## Tratamento de Erros
+
+-Validações automáticas com Bean Validation
+-Handler global de exceções (@RestControllerAdvice)
+-Respostas padronizadas para erros de validação e regras de negócio
+
 ## Próximos passos
 
-- Criar Controller REST com Spring Boot
-- Implementar Repository com Spring Data JPA
-- Persistência em banco de dados
-- Validações e tratamento de erros
-- Documentação da API com Swagger
+-Paginação e ordenação de tarefas
+-Autenticação e autorização
+-Documentação da API com Swagger / OpenAPI
+-Persistência em banco relacional externo (PostgreSQL ou MySQL)
+-Testes automatizados (JUnit / Mockito)
 
 ## Autora
 
